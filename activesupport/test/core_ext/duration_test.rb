@@ -10,6 +10,20 @@ require "yaml"
 class DurationTest < ActiveSupport::TestCase
   include TimeZoneTestHelpers
 
+  def test_debbug
+    klass = ActiveSupport::Duration
+    parts = [:years, :months, :weeks, :days, :hours, :minutes, :seconds]
+    parts.combination(2).to_a.each do |combination|
+      p1, p2 = combination
+
+      e = assert_raise(TypeError) do
+        1.send(p1).send(p2)
+      end
+
+      assert_equal "no implicit conversion of #{klass} into #{klass}", e.message
+    end
+  end
+
   def test_is_a
     d = 1.day
     assert d.is_a?(ActiveSupport::Duration)

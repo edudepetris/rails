@@ -420,7 +420,12 @@ module ActiveSupport
         value.respond_to?(method)
       end
 
+      FULL_PARTS = PARTS + [:year, :month, :week, :day, :hour, :minute, :second]
+
       def method_missing(method, *args, &block)
+        # it does not allow chain multiple parts.
+        raise_type_error(self) if FULL_PARTS.include?(method.to_sym)
+
         value.public_send(method, *args, &block)
       end
 
